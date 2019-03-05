@@ -1,7 +1,7 @@
 #include "ofApp.h"
 const int framerate = 60;
 ofVec2f org, cur, mouse;
-ofFbo fbo, hedgehog9;  // framebuffer object
+ofFbo fbo;  // framebuffer object
 ofColor heart(255,230,230);
 ofColor pink(214,117,117);
 Boolean pressF;
@@ -26,7 +26,7 @@ void ofApp::setup(){
     d = 125;
     cur = org;
     
-    fbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA32F); // higher precision alpha (no artifacts)
+    fbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA32F);
     fbo.begin();
     ofClear(255,255,255, 0);
     fbo.end();
@@ -118,7 +118,6 @@ void ofApp::keyPressed(int key){
     if(key == 's') direction = 4;
     if(key == 'a') direction = 1;
     if(key == 'd') direction = 3;
-    //    if (key == 'w' || key == 's' || key == 'a' || key == 'd') move = true;
     
 }
 
