@@ -6,7 +6,7 @@ ofColor heart(255,230,230);
 ofColor pink(214,117,117);
 Boolean pressF;
 Boolean finalPosition;
-float a, b, c, d;
+float a, b, c, d; //For drawing
 int direction;
 
 ofTrueTypeFont gillsans,amaticr,amaticBold;
@@ -19,7 +19,7 @@ void ofApp::setup(){
     amaticBold.load("amaticBold.ttf", 32);
     ofSetFrameRate(framerate);
     ofBackground(255, 255, 255);
-    org = ofVec2f(ofGetWidth()/3,ofGetHeight()/2);
+    org = ofVec2f(ofGetWidth()/3,ofGetHeight()/2); //First Position
     a = 50;
     b = 25;
     c = 100;
@@ -32,8 +32,7 @@ void ofApp::setup(){
     fbo.end();
     ofSetBackgroundColor(255, 255, 255);
     
-    pressF = false;
-    finalPosition = false;
+    
 }
 
 //--------------------------------------------------------------
@@ -105,9 +104,9 @@ void ofApp::draw(){
     
     ofSetColor(255,255,255);  // always set the color before drawing the fbo
     if (finalPosition == false)
-        fbo.draw(0,0);
+        fbo.draw(0,0); 
     else
-        fbo.draw(100,375);
+        fbo.draw(100,375); // Mouse press position
     
 }
 
