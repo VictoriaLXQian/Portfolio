@@ -4,8 +4,8 @@
 
 float a;
 bool startX, startY;
-ofImage circleOne, circleTwo, circleThree;
-ofVec2f circleO, circleT, circleThr;
+ofImage circleOne, circleTwo, noteH;
+ofVec2f circleO, circleT;
 ofVec2f circleOcenter, circleTcenter;
 ofVec2f velO, velT;
 ofTrueTypeFont gillsans,title; // title using Amaticr
@@ -21,6 +21,8 @@ ofSoundPlayer soHigh;
 ofSoundPlayer so;
 ofSoundPlayer playlist[10]={la,xi,xiLow,duo,rui,ruiLow,mi,fa,so,soHigh};
 bool pressOne, pressTwo, pressTre, pressFour, pressFive, pressSix, pressSeven;
+bool pressA, pressB, pressC, pressD, pressE, pressF, pressG;
+bool relA;
 bool pressAny, timePass, gameover;
 float pxDistance;
 float b;
@@ -32,16 +34,51 @@ float sec;
 float currentSec;
 int k;
 int f;
-int whatever;
+ofColor pressColor,black, white;
+note note1,note2;
+
 
 //--------------------------------------------------------------
+note::note(){
+    offsetX = ofRandom (-400,500);
+    offsetY = ofRandom(-500,400);
+}
+void note::setup(){
+    noteOne.load("noteOne.png");
+//    noteTwo.load("noteTwo.png");
+//    noteThree.load("noteThree.png");
+}
+
+void note::update(){
+    float time = ofGetElapsedTimef();
+    rX = ofSignedNoise(time*0.05, time*0.05,time*0.05)*400.0;
+    rY = ofSignedNoise(time*0.03)*400.0;
+    rZ = ofSignedNoise(time*0.09)*400.0;
+    offsetY += 0.02;
+    if (offsetY > ofGetHeight()){
+        offsetY = ofRandom(-500, -100);
+    }
+}
+
+void note::draw(){
+    ofPushMatrix();
+    ofTranslate(ofGetScreenWidth()/2+offsetX, ofGetScreenHeight()/2+offsetY);
+    ofScale(2.5,2.5,2.5);
+    ofRotateX(rX);
+    ofRotateY(rY);
+    ofRotateZ(rZ);
+    noteOne.draw(0-noteOne.getWidth()/2, 0-noteOne.getHeight()/2);
+//    noteTwo.draw(0-noteTwo.getWidth()/2, 0-noteTwo.getHeight()/2);
+//    noteThree.draw(0-noteThree.getWidth()/2, 0-noteThree.getHeight()/2);
+    ofPopMatrix();
+}
+
 void ofApp::setup(){
     ofSetFrameRate(60);
     gillsans.load("gillsans", 12);
     title.load("amaticr.ttf", 16);
     circleOne.load("circleOne.png");
     circleTwo.load("circleTwo.png");
-    circleThree.load("circleThree.png");
     la.load("a.mp3");
     xi.load("b.mp3");
     xiLow.load("bLow.mp3");
@@ -52,22 +89,28 @@ void ofApp::setup(){
     fa.load("f.mp3");
     so.load("g.mp3");
     soHigh.load("gHigh.mp3");
+    noteH.load("noteOne.png");
+    ofSeedRandom();
+    note1.setup();
     circleO = ofVec2f(0,0);
     circleT = ofVec2f(ofGetScreenWidth(),ofGetScreenHeight());
     velO = ofVec2f(ofRandom(-15,15),ofRandom(-15,15));
     velT = ofVec2f(ofRandom(-17,17),ofRandom(-17,17));
-
     
 }
 int i = 0;
-
+float rX = 0;
+float rY = 0;
+float rZ = 0;
 //--------------------------------------------------------------
 void ofApp::update(){
+    pressColor = ofColor(0, 0, 255);
+    black = ofColor (0,0,0);
+    white = ofColor (255,255,255);
     //sec = (ofGetFrameNum()/60) % 60;
     sec = ofGetElapsedTimef();
     //cout << sec << endl;
-    float g;
-    g = 5;
+    
     i ++;
     circleOcenter = ofVec2f(circleO.x+210,circleO.y+210);
     circleTcenter = ofVec2f(circleT.x+210, circleT.y+210);
@@ -125,12 +168,133 @@ void ofApp::update(){
         }
     }
     // collision function
-    
     k = ofRandom(0, 9);
+    
+    note1.update();
 }
 
 
 //--------------------------------------------------------------
+void ofApp::secondPage(){
+//        title.drawString("Press the accordinate letter key to listen to the tuned notes", ofGetScreenWidth()/3+150, ofGetScreenHeight()*0.7);
+    
+    for (float b=0; b < ofGetScreenWidth(); b+=a) {
+        ofSetColor(255, 255, 255);
+        ofDrawRectangle(b+10, ofGetScreenHeight()/2, a-5, (0.66)*ofGetScreenHeight());
+    } //白键
+    for (float c=1; c < 6; c++){
+        ofDrawLine(0, 200+15*c, ofGetScreenWidth(), 200+15*c);
+    }
+    ofSetLineWidth(2);
+    ofDrawEllipse(1.5*a, 290, 20, 14);
+    ofDrawLine(1.5*a-16, 290, 1.5*a+16, 290);
+    ofDrawLine(1.5*a+10, 290, 1.5*a+10, 235); // do
+    ofDrawEllipse(2.5*a, 282, 20, 14);
+    ofDrawLine(2.5*a+10, 282, 2.5*a+10, 227);//rui
+    ofDrawEllipse(3.5*a, 274, 20, 14);
+    ofDrawLine(3.5*a+10, 274, 3.5*a+10, 219); // mi
+    ofDrawEllipse(4.5*a, 266, 20, 14);
+    ofDrawLine(4.5*a+10, 266, 4.5*a+10, 211); // fa
+    ofDrawEllipse(5.5*a, 258, 20, 14);
+    ofDrawLine(5.5*a+10, 258, 5.5*a+10, 203); // so
+    ofDrawEllipse(6.5*a, 250, 20, 14);
+    ofDrawLine(6.5*a+10, 250, 6.5*a+10, 195); // la
+    ofDrawEllipse(7.5*a, 242, 20, 14);
+    ofDrawLine(7.5*a-10, 242, 7.5*a-10, 297); // xi
+    ofPushMatrix();
+    ofTranslate(0.3*a, 200);
+    ofScale(0.35, 0.35);
+    noteH.draw(0,0);
+    ofPopMatrix();
+    ofSetColor(0, 0, 0);
+    gillsans.drawString("C", 5+1.5*a, ofGetScreenHeight()/2+500);
+    gillsans.drawString("D", 5+2.5*a, ofGetScreenHeight()/2+500);
+    gillsans.drawString("E", 5+3.5*a, ofGetScreenHeight()/2+500);
+    gillsans.drawString("F", 5+4.5*a, ofGetScreenHeight()/2+500);
+    gillsans.drawString("G", 5+5.5*a, ofGetScreenHeight()/2+500);
+    gillsans.drawString("A", 5+6.5*a, ofGetScreenHeight()/2+500);
+    gillsans.drawString("B", 5+7.5*a, ofGetScreenHeight()/2+500);
+    if (pressA){
+        ofSetColor(pressColor);
+        ofDrawRectangle(10+6*a, ofGetScreenHeight()/2, a-5, (0.66)*ofGetScreenHeight());
+        ofSetColor(white);
+        gillsans.drawString("A", 5+6.5*a, ofGetScreenHeight()/2+500);
+        gillsans.drawString("6",3+6.5*a, 320);
+    }
+    else if (pressB){
+        ofSetColor(pressColor);
+        ofDrawRectangle(10+7*a, ofGetScreenHeight()/2, a-5, (0.66)*ofGetScreenHeight());
+        ofSetColor(white);
+        gillsans.drawString("B", 5+7.5*a, ofGetScreenHeight()/2+500);
+        gillsans.drawString("7",5+7.5*a, 320);
+    }
+    else if (pressC){
+        ofSetColor(pressColor);
+        ofDrawRectangle(10+a, ofGetScreenHeight()/2, a-5, (0.66)*ofGetScreenHeight());
+        ofSetColor(white);
+        gillsans.drawString("C", 5+1.5*a, ofGetScreenHeight()/2+500);
+        gillsans.drawString("1",1.5*a, 320);
+    }
+    else if (pressD){
+        ofSetColor(pressColor);
+        ofDrawRectangle(10+a*2, ofGetScreenHeight()/2, a-5, (0.66)*ofGetScreenHeight());
+        ofSetColor(white);
+        gillsans.drawString("D", 5+2.5*a, ofGetScreenHeight()/2+500);
+        gillsans.drawString("2",5+2.5*a, 320);
+    }
+    else if (pressE){
+        ofSetColor(pressColor);
+        ofDrawRectangle(10+a*3, ofGetScreenHeight()/2, a-5, (0.66)*ofGetScreenHeight());
+        ofSetColor(white);
+        gillsans.drawString("E", 5+3.5*a, ofGetScreenHeight()/2+500);
+        gillsans.drawString("3",5+3.5*a, 320);
+    }
+    else if (pressF){
+        ofSetColor(pressColor);
+        ofDrawRectangle(10+a*4, ofGetScreenHeight()/2, a-5, (0.66)*ofGetScreenHeight());
+        ofSetColor(white);
+        gillsans.drawString("F", 5+4.5*a, ofGetScreenHeight()/2+500);
+        gillsans.drawString("4",5+4.5*a, 320);
+    }
+    else if (pressG){
+        ofSetColor(pressColor);
+        ofDrawRectangle(10+a*5, ofGetScreenHeight()/2, a-5, (0.66)*ofGetScreenHeight());
+        ofSetColor(white);
+        gillsans.drawString("G", 5+5.5*a, ofGetScreenHeight()/2+500);
+        gillsans.drawString("5",5+5.5*a, 320);
+    }
+    ofSetColor(0, 0, 0); //升降号
+    ofDrawRectangle(2*(ofGetScreenWidth()/9)-50, (ofGetScreenHeight()/3)-2, a/2, (0.66*0.8)*ofGetScreenHeight());
+    ofDrawRectangle(3*(ofGetScreenWidth()/9)-50, (ofGetScreenHeight()/3)-2, a/2, (0.66*0.8)*ofGetScreenHeight());
+    ofDrawRectangle(5*(ofGetScreenWidth()/9)-50, (ofGetScreenHeight()/3)-2, a/2, (0.66*0.8)*ofGetScreenHeight());
+    ofDrawRectangle(6*(ofGetScreenWidth()/9)-50, (ofGetScreenHeight()/3)-2, a/2, (0.66*0.8)*ofGetScreenHeight());
+    ofDrawRectangle(7*(ofGetScreenWidth()/9)-50, (ofGetScreenHeight()/3)-2, a/2, (0.66*0.8)*ofGetScreenHeight());
+}
+void ofApp::pianoKeyboard(){
+    for (float b=0; b < ofGetScreenWidth(); b+=a) {
+        ofSetColor(255, 255, 255);
+        ofDrawRectangle(b+10, ofGetScreenHeight()/3, a-5, (0.66)*ofGetScreenHeight());
+    } //白键
+    ofSetColor(0, 0, 0); //升降号
+    ofDrawRectangle(2*(ofGetScreenWidth()/9)-50, (ofGetScreenHeight()/3)-2, a/2, (0.66*0.65)*ofGetScreenHeight());
+    ofDrawRectangle(3*(ofGetScreenWidth()/9)-50, (ofGetScreenHeight()/3)-2, a/2, (0.66*0.65)*ofGetScreenHeight());
+    ofDrawRectangle(5*(ofGetScreenWidth()/9)-50, (ofGetScreenHeight()/3)-2, a/2, (0.66*0.65)*ofGetScreenHeight());
+    ofDrawRectangle(6*(ofGetScreenWidth()/9)-50, (ofGetScreenHeight()/3)-2, a/2, (0.66*0.65)*ofGetScreenHeight());
+    ofDrawRectangle(7*(ofGetScreenWidth()/9)-50, (ofGetScreenHeight()/3)-2, a/2, (0.66*0.65)*ofGetScreenHeight());
+    
+}
+void ofApp::win(){
+    ofSetColor(0, 255, 0);
+    ofDrawRectangle(0, 0, ofGetScreenWidth(), ofGetScreenHeight());
+    note1.draw();
+    
+}
+void ofApp::lose(){
+    ofSetColor(255, 0, 0);
+    ofDrawRectangle(0, 0, ofGetScreenWidth(), ofGetScreenHeight());
+    note1.draw();
+    
+}
 void ofApp::draw(){
     ofBackground(0, 0, 0);
     ofSetColor(ofColor::white);
@@ -140,60 +304,19 @@ void ofApp::draw(){
     }
     // collision, image inset_ first page
     if (second && ! startX) {
-        for (int c = 0; c < 8;  c++) {
-            ofDrawRectangle(b*c+(c-1)*100, ofGetScreenHeight()/2, 100, 100);
-        }
-        ofSetColor(0, 0, 0);
-        gillsans.drawString("C", b + 48, ofGetScreenHeight()/2+50);
-        gillsans.drawString("D", b*2 + 148, ofGetScreenHeight()/2+50);
-        gillsans.drawString("E", b*3 + 248, ofGetScreenHeight()/2+50);
-        gillsans.drawString("F", b*4 + 348, ofGetScreenHeight()/2+50);
-        gillsans.drawString("G", b*5 + 448, ofGetScreenHeight()/2+50);
-        gillsans.drawString("A", b*6 + 548, ofGetScreenHeight()/2+50);
-        gillsans.drawString("B", b*7 + 648, ofGetScreenHeight()/2+50);
-        ofSetColor(255, 255, 255);
-        title.drawString("Press the accordinate letter key to listen to the tuned notes", ofGetScreenWidth()/3+150, ofGetScreenHeight()*0.7);
+        secondPage();
     }
     if (startX && startY) {
-        for (float b=0; b < ofGetScreenWidth(); b+=a) {
-            ofSetColor(255, 255, 255);
-            ofDrawRectangle(b+10, ofGetScreenHeight()/3, a-5, (0.66)*ofGetScreenHeight());
-        } //白键
-        ofSetColor(0, 0, 0); //升降号
-        ofDrawRectangle(2*(ofGetScreenWidth()/9)-50, (ofGetScreenHeight()/3)-2, a/2, (0.66*0.65)*ofGetScreenHeight());
-        ofDrawRectangle(3*(ofGetScreenWidth()/9)-50, (ofGetScreenHeight()/3)-2, a/2, (0.66*0.65)*ofGetScreenHeight());
-        ofDrawRectangle(5*(ofGetScreenWidth()/9)-50, (ofGetScreenHeight()/3)-2, a/2, (0.66*0.65)*ofGetScreenHeight());
-        ofDrawRectangle(6*(ofGetScreenWidth()/9)-50, (ofGetScreenHeight()/3)-2, a/2, (0.66*0.65)*ofGetScreenHeight());
-        ofDrawRectangle(7*(ofGetScreenWidth()/9)-50, (ofGetScreenHeight()/3)-2, a/2, (0.66*0.65)*ofGetScreenHeight());
-        if (youlose == true){
-            ofSetColor(255, 0, 0);
-            ofDrawRectangle(0, 0, ofGetScreenWidth(), ofGetScreenHeight());
-        }
-        if (youwin == true){
-            ofSetColor(0, 255, 0);
-            ofDrawRectangle(0, 0, ofGetScreenWidth(), ofGetScreenHeight());
-        }
-    }    
-//    while (startX && startY) {
-//            for (float b=0; b < ofGetScreenWidth(); b+=a) {
-//            ofSetColor(255, 255, 255);
-//            ofDrawRectangle(b+10, ofGetScreenHeight()/3, a-5, (0.66)*ofGetScreenHeight());
-//            } //白键
-//            ofSetColor(0, 0, 0); //升降号
-//            ofDrawRectangle(2*(ofGetScreenWidth()/9)-50, (ofGetScreenHeight()/3)-2, a/2, (0.66*0.65)*ofGetScreenHeight());
-//            ofDrawRectangle(3*(ofGetScreenWidth()/9)-50, (ofGetScreenHeight()/3)-2, a/2, (0.66*0.65)*ofGetScreenHeight());
-//            ofDrawRectangle(5*(ofGetScreenWidth()/9)-50, (ofGetScreenHeight()/3)-2, a/2, (0.66*0.65)*ofGetScreenHeight());
-//            ofDrawRectangle(6*(ofGetScreenWidth()/9)-50, (ofGetScreenHeight()/3)-2, a/2, (0.66*0.65)*ofGetScreenHeight());
-//            ofDrawRectangle(7*(ofGetScreenWidth()/9)-50, (ofGetScreenHeight()/3)-2, a/2, (0.66*0.65)*ofGetScreenHeight());
-//            if (youlose == true){
-//                ofSetColor(255, 0, 0);
-//                ofDrawRectangle(0, 0, ofGetScreenWidth(), ofGetScreenWidth());
-//                continue;
-//            }else (youwin == true);
-//                ofSetColor(0, 255, 0);
-//                ofDrawRectangle(0, 0, ofGetScreenWidth(), ofGetScreenHeight());
-//                continue;
-//    }
+        pianoKeyboard();
+    }
+    if (youlose == true){
+        lose();
+        return;
+    } else if (youwin == true){
+        win();
+        return;
+    }
+    
 }
 
 //--------------------------------------------------------------
@@ -201,28 +324,35 @@ void ofApp::keyPressed(int key){
     switch (key) {
         case 'a':
             la.play();
+            pressA = true;
             break;
         case 'b':
             xi.play();
+            pressB = true;
             break;
         case 'c':
             duo.play();
+            pressC = true;
             break;
         case 'd':
             rui.play();
+            pressD = true;
             break;
         case 'e':
             mi.play();
+            pressE = true;
             break;
         case 'f':
             fa.play();
+            pressF = true;
             break;
         case 'g':
             so.play();
+            pressG = true;
             break;
     }
     // second page, toned notes play
-    //if (key == '9') gameover= true;
+    if (key == '9') gameover= true;
     if (key == '1'&&pressOne) youwin = true;
     if ((key != '1') && pressOne) youlose = true;
     if (key == '2'&&pressTwo) youwin = true;
@@ -237,11 +367,12 @@ void ofApp::keyPressed(int key){
     if (key != '6'&&pressSix) youlose = true;
     if (key == '7'&&pressSeven) youwin = true;
     if (key != '7'&&pressSeven) youlose = true;
-    if (ofInRange(key, 1, 7) && pressAny) youlose = true;
+    if ((key == '1' || key == '2' || key == '3' || key == '4' || key == '5' || key == '6' || key == '7') && pressAny) youlose = true;
 }
 
 //--------------------------------------------------------------
 void ofApp::keyReleased(int key){
+
 
 }
 
@@ -267,7 +398,7 @@ void ofApp::mousePressed(int x, int y, int button){
     if (startX&&startY) {
         playlist[k].play();
     }
-    cout << k << endl;
+//    cout << k << endl;
     if (k==0)pressSix = true;
     if (k==1)pressSeven = true;
     if (k==3)pressOne=true;

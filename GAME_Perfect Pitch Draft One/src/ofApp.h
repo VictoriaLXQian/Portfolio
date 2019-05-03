@@ -10,6 +10,10 @@ class ofApp : public ofBaseApp{
 		void setup();
 		void update();
 		void draw();
+        void secondPage();
+        void pianoKeyboard();
+        void win();
+        void lose();
 
 		void keyPressed(int key);
 		void keyReleased(int key);
@@ -24,6 +28,22 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
         bool circleOa = true;
         bool circleTa = true;
+};
 
-		
+class note {
+    ofImage noteOne;
+    ofImage noteTwo;
+    ofImage noteThree;
+    
+    float rX = 0;
+    float rY = 0;
+    float rZ = 0;
+    
+    float offsetX, offsetY;
+    
+    public:
+        note();
+        void setup();
+        void update();
+        void draw();
 };
