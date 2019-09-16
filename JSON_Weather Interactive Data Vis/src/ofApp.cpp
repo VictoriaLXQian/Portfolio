@@ -24,11 +24,11 @@ ofTrueTypeFont gillsans;
 //--------------------------------------------------------------
 void ofApp::setup(){
     gillsans.load("gillsans.ttf", 12);
-    std::string urlMilan = "https://api.darksky.net/forecast/352dc2df4f80b08a0b3d0b71250b3b7b/45.4642,9.1900";
-    std::string urlMinneapolis = "https://api.darksky.net/forecast/352dc2df4f80b08a0b3d0b71250b3b7b/44.9778,-93.2650";
-    std::string urlNyc = "https://api.darksky.net/forecast/352dc2df4f80b08a0b3d0b71250b3b7b/40.7128,-74.0060";
-    std::string urlNc = "https://api.darksky.net/forecast/352dc2df4f80b08a0b3d0b71250b3b7b/35.7796,-78.6382";
-    std::string urlHkg = "https://api.darksky.net/forecast/352dc2df4f80b08a0b3d0b71250b3b7b/22.3193,114.1694";
+    std::string urlMilan = "YOUR API KEY";
+    std::string urlMinneapolis = "YOUR API KEY";
+    std::string urlNyc = "YOUR API KEY";
+    std::string urlNc = "YOUR API KEY";
+    std::string urlHkg = "YOUR API KEY";
     bool milan = jsonMilan.open(urlMilan);
     bool minneapolis = jsonMinn.open(urlMinneapolis);
     bool nyc = jsonNyc.open(urlNyc);
